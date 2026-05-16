@@ -1,0 +1,214 @@
+UI/UX REFERENCE DOCUMENT  
+Sistem Helpdesk Perbaikan IT Kampus  
+Kelompok 1  |  Pemrograman Web II  
+Referensi Visual & Panduan Desain  
+ 
+1. Pendahuluan  
+Dokumen ini merangkum referensi antarmuka pengguna (UI) yang dipilih untuk proyek Sistem 
+Helpdesk Perbaikan IT Kampus. Terdiri dari tiga halaman utama yang menjadi acuan desain, disertai 
+panduan design system (tipografi, warna, komponen) yang diadaptasi da ri token desain Wise 
+(DESIGN.md).  
+ 
+Tujuan dokumen ini adalah memberikan arah visual yang konsisten bagi seluruh anggota tim dalam 
+proses implementasi frontend menggunakan Bootstrap 5 dan framework Laravel.  
+ 
+2. Overview Proyek  
+Sistem ini melayani tiga role pengguna dengan dashboard berbeda:  
+• Pelapor (Mahasiswa & Dosen) — membuat dan memantau tiket kerusakan.  
+• Teknisi IT — mengambil tugas dan memperbarui status perbaikan.  
+• Administrator — mengelola master data, akun, dan melihat statistik keseluruhan.  
+ 
+3. Referensi Antarmuka Pengguna  
+Tiga gambar berikut dipilih sebagai acuan visual untuk masing -masing halaman utama aplikasi, 
+diurutkan dari halaman depan (homepage), formulir pengisian tiket, hingga dashboard admin.  
+ 
+HALAMAN 1 — HOMEPAGE / HELP CENTER  
+3.1  Homepage — Help Center  
+Sumber referensi menampilkan tampilan selamat datang dengan hero banner berwarna biru tua 
+bergradasi, statistik ringkas (jumlah anggota, ide, solusi), dan empat kartu navigasi utama: Articles, 
+Community Q&A, News & Updates, dan Ideas.  Untuk proyek kit a sendiri akan disimpli fikasi dengan 
+hanya mengguna kan tombol pengajuan formulir dan status pengaduan.  
+ 
+ 
+Gambar 1. Referensi Homepage — Help Center  
+ 
+HALAMAN 2 — FORMULIR PENGISIAN TIKET  
+3.2  Formulir Pengisian Tiket (Help Desk Ticket Request)  
+Referensi menampilkan form helpdesk yang terstruktur rapi dengan dropdown tipe request, field 
+prioritas, data diri pelapor, hingga detail event dan checklist peralatan. Desain clean dengan latar 
+putih, label abu -abu, dan tombol submit biru tegas di pojok k anan bawah.  
+ 
+Elemen yang diadopsi untuk proyek ini:  
+• Dropdown Kategori Kerusakan (Proyektor, Komputer Lab, WiFi, AC/Listrik, Lainnya) dan 
+Prioritas (Rendah, Sedang, Tinggi, Kritis).  
+• Field data pelapor: Nama Lengkap, Email, NIM/NIP, Departemen/Prodi.  
+• Area deskripsi kerusakan dengan textarea luas dan field lokasi (gedung + ruangan).  
+• Tombol submit 'Kirim Laporan' yang menonjol di kanan bawah.  
+• Validasi form sisi klien menggunakan jQuery sebelum data dikirim ke server.  
+ 
+
+ 
+Gambar 2. Referensi Formulir Pengisian Tiket  
+ 
+HALAMAN 3 — DASHBOARD ADMIN (TICKET VIEW)  
+3.3  Dashboard Admin — Ticket View  
+Referensi menampilkan antarmuka manajemen tiket dengan tab status (All, New, Open, On -Hold, 
+Pending, Resolved), filter multi -kolom (Priority, Status, Created Date), tabel data tiket dengan badge 
+prioritas berwarna, dan tombol aksi (edit/manage) per baris.  
+ 
+Elemen yang diadopsi untuk proyek ini:  
+• Tab horizontal untuk filter cepat berdasarkan status tiket.  
+• Filter lanjutan: Prioritas (dropdown), Status (dropdown), Tanggal Dibuat.  
+• Tabel tiket dengan kolom: Subject, Prioritas (badge warna), Teknisi Assigned, Tanggal, 
+Status, Aksi.  
+• Badge prioritas berwarna: Merah (Kritis/High), Kuning (Sedang/Medium), Hijau 
+(Rendah/Low).  
+• Tombol '+ Buat Tiket' di pojok kanan atas untuk Admin/Teknisi.  
+• Pagination di bagian bawah tabel.  
+
+ 
+ 
+Gambar 3. Referensi Dashboard Admin — Ticket View  
+  
+
+4. Design System — Panduan Desain  
+Design system berikut diadaptasi dari token desain Wise (sumber: github.com/VoltAgent/awesome -
+design -md). Meski proyek ini menggunakan Bootstrap 5 sebagai framework CSS utama, panduan di 
+bawah ini menjadi referensi tipografi, palet warna, dan prinsip kompo nen yang dapat disesuaikan 
+melalui custom CSS atau variabel SCSS Bootstrap.  
+ 
+4.1  Palet Warna  
+Palet warna utama menggunakan nuansa hijau lime sebagai warna brand (primary), dikombinasikan 
+dengan near -black sebagai warna teks utama, dan canvas putih/sage sebagai latar belakang. Filosofi 
+ini menciptakan kontras yang kuat dan tampilan modern ala finte ch Skandinavia.  
+ 
+Preview  Nama Token  Hex Kegunaan  
+  primary  #9fe870  CTA utama, tombol primer  
+  on-primary  #0e0f0c  Teks di atas warna primary  
+  primary -active  #cdffad  Hover/active state tombol primer  
+  primary -pale #e2f6d5  Background badge positif, card hijau 
+muda  
+  ink #0e0f0c  Teks utama (near -black)  
+  body  #454745  Teks paragraf/body  
+  mute  #868685  Teks sekunder/placeholder  
+  canvas  #ffffff  Background halaman / kartu  
+  canvas -soft #e8ebe6  Background sage / section alternating  
+  positive  #2ead4b  Status berhasil / resolved  
+  warning  #ffd11a  Status peringatan / on -hold 
+  negative  #d03238  Status error / prioritas kritis  
+ 
+Catatan implementasi Bootstrap 5:  
+• Override variabel SCSS: --bs-primary: #9fe870; --bs-dark: #0e0f0c; untuk menyesuaikan 
+dengan palet di atas.  
+• Gunakan kelas Bootstrap standar (btn -primary, badge bg -success, dsb.) dengan override 
+warna.  
+ 
+4.2  Tipografi  
+Sistem tipografi menggunakan dua typeface: Inter sebagai font utama (tersedia gratis via Google 
+Fonts) dan Wise Sans sebagai font display brand (proprietary — dapat diganti dengan Inter weight 
+900 atau Manrope weight 800/900 untuk tampilan serupa).  
+ 
+Token  Ukuran  Weight  Kegunaan  
+display -mega 126px  900 Hero stencil skala maksimum  
+Token  Ukuran  Weight  Kegunaan  
+display -xl 64px 900 Headline hero standar  
+display -lg 47px 400 Sub-display lebih ringan  
+display -md 40px 900 Judul section / kartu  
+display -sm 32px 600 Heading section (Inter)  
+display -xs 24px 600 Sub-section heading  
+body -lg 20px 400 Lead paragraph  
+body -md 16px 400 Body teks default  
+body -md-strong  16px 600 Body tebal / label penting  
+body -sm 14px 400 Teks sekunder  
+body -sm-strong  14px 600 Label nav, caption tebal  
+caption  12px 400 Fine print / keterangan kecil  
+button -md 16px 600 Label tombol  
+ 
+Prinsip tipografi:  
+• Weight 900 hanya untuk headline hero — seluruh level lainnya menggunakan weight 600 
+atau 400.  
+• Inter sebagai font utilitas utama (body, nav, tombol, form).  
+• Untuk proyek ini, cukup import Inter dari Google Fonts: @import 
+url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');  
+ 
+4.3  Spacing & Border Radius  
+Sistem spacing berbasis kelipatan 4px, dan border radius yang digunakan cenderung besar untuk 
+memberikan kesan ramah dan modern.  
+ 
+Token  Nilai Contoh Penggunaan  
+spacing.sm  8px Gap antar ikon  
+spacing.lg  16px Padding dalam form input  
+spacing.xl  24px Padding dalam kartu  
+spacing.3xl  48px Padding section/hero band  
+rounded.md  12px Form input, badge kecil  
+rounded.xl  24px Tombol & kartu utama  
+rounded.pill  9999px  Badge status tiket  
+ 
+4.4  Panduan Komponen  
+Komponen -komponen utama yang diimplementasikan dalam proyek dan mapping -nya ke token 
+desain:  
+ 
+Tombol (Button)  
+• Primary — background #9fe870 (lime -green), teks #0e0f0c, border -radius 24px. Digunakan 
+untuk: Kirim Laporan, Ambil Tugas, Selesaikan Tiket.  
+• Secondary — background #e8ebe6 (sage), teks #0e0f0c. Digunakan untuk: Batal, Kembali.  
+• Danger/Negative — background #d03238, teks putih. Digunakan untuk: Hapus Data 
+(Admin).  
+ 
+Badge Status Tiket  
+• Open — background #e2f6d5, teks #054d28, border -radius pill.  
+• On Progress — background #fff3cd, teks #b86700, border -radius pill.  
+• Resolved — background #d1e7dd, teks #0f5132, border -radius pill.  
+ 
+Kartu (Card)  
+• card-content: background putih, border -radius 24px, padding 24px. Digunakan untuk kartu 
+navigasi homepage dan detail tiket.  
+• card-feature -sage: background #e8ebe6, border -radius 24px. Digunakan untuk section 
+statistik.  
+ 
+Form Input  
+• Background putih, border 1px solid #0e0f0c, border -radius 12px, padding 12px 16px.  
+• Focus state: outline warna primary (#9fe870).  
+• Placeholder: warna #868685 (muted).  
+ 
+5. Do's and Don'ts Desain  
+5.1  Do — Yang Harus Dilakukan  
+• Gunakan warna #9fe870 (lime -green) secara konsisten untuk SEMUA tombol CTA utama.  
+• Terapkan border -radius 24px pada semua tombol dan kartu utama.  
+• Gunakan surface contrast (canvas -soft #e8ebe6 vs canvas #ffffff) sebagai pembeda elevasi, 
+bukan shadow.  
+• Tampilkan badge status tiket menggunakan palet semantik: positive (hijau), warning 
+(kuning), negative (merah).  
+• Pastikan hero headline menggunakan font -weight 900 dengan Inter.  
+• Responsif: gunakan grid Bootstrap untuk tampilan mobile, tablet, dan desktop.  
+ 
+5.2  Don't — Yang Harus Dihindari  
+• Jangan gunakan warna lime -green untuk indikator status 'success' — warna tersebut sudah 
+dipakai sebagai CTA brand.  
+• Jangan render tombol sebagai persegi tajam (0px radius) — radius 24px adalah identitas 
+visual yang wajib dipertahankan.  
+• Jangan memasangkan tombol CTA hijau di atas background hijau — selalu gunakan 
+background netral (putih/sage/ink).  
+• Jangan menambahkan warna aksen kedua selain yang sudah ada di palet — lime-green adalah 
+satu-satunya warna brand.  
+• Jangan menggunakan font -weight di bawah 900 untuk hero headline.  
+ 
+6. Mapping Halaman ke Role Pengguna  
+Tabel berikut merangkum halaman -halaman utama beserta role yang mengaksesnya dan referensi UI 
+yang digunakan.  
+ 
+Halaman  Role Referensi Gambar  Fitur Utama  
+Homepage / Dashboard  Semua Role  Gambar 1  Statistik, navigasi cepat  
+Form Buat Tiket Baru  Pelapor  Gambar 2  Input kategori, 
+deskripsi, prioritas  
+Riwayat Tiket Saya  Pelapor  Gambar 3 (adaptasi)  Tabel tiket, filter status  
+Daftar Tugas Teknisi  Teknisi  Gambar 3  Ambil tugas, update 
+status  
+Dashboard Admin (Ticket View)  Admin  Gambar 3  Full CRUD, statistik, 
+filter 
+ 
+ 
+Dokumen ini dibuat sebagai bagian dari tugas mata kuliah Pemrograman Web II. Design system diadaptasi dari Wise 
+Design Language (github.com/VoltAgent/awesome -design -md). Referensi UI gambar 1 –3 dipilih oleh tim sebagai acuan 
+visual implementasi.  
+Kelompok 1  |  Pemrograman Web II  |  2025  

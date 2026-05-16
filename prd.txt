@@ -1,0 +1,198 @@
+ 
+  
+  
+[Sistem Helpdesk Perbaikan IT Kampus ]  
+Product Requirements Document  By 
+Kelompok 1   
+  
+  
+  
+  
+This work is licensed under a Creative Commons Attribution 4.0 International License   
+  
+  
+    
+1. Introduction  
+1.1 Problem Backround & Urgency  
+Latar Belakang: Lingkungan kampus sangat bergantung pada fasilitas teknologi seperti 
+proyektor kelas, komputer laboratorium, dan jaringan WiFi. Saat ini, pelaporan kerusakan 
+sering kali dilakukan secara manual (melalui grup WhatsApp atau laporan lisan kepada staf). 
+Hal in i menciptakan Silo Informasi , di mana laporan sering tumpang tindih, hilang, atau sulit 
+dilacak progres perbaikannya.   
+Urgensi:  Intervensi teknologi melalui sistem Ticketing  / Helpdesk berbasis web menjadi 
+mendesak karena:  
+• Transparansi Status:  Pelapor sering kali tidak tahu apakah laporan mereka sedang 
+ditangani atau diabaikan.  
+• Manajemen Beban Kerja Teknisi:  Teknisi IT kesulitan memprioritaskan masalah karena 
+tidak ada database  terpusat yang mencatat tingkat urgensi dan kategori kerusakan.  
+• Pemenuhan Syarat Akademik:  Secara teknis, sistem ini dirancang untuk 
+mengimplementasikan relasi basis data kompleks (minimal 3 One-to-Many  dan 1 Many -to-
+Many ) sesuai standar kelulusan mata kuliah Pemrograman Web II.  
+ 
+1.2 Web-Based Rationale   
+Keputusan untuk mengembangkan platform ini sebagai aplikasi web (bukan mobile ) 
+didasarkan pada:  
+1. Akses Universal:  Dosen, staf, dan teknisi umumnya bekerja di depan komputer/laptop. 
+Aplikasi web memungkinkan akses instan melalui browser  tanpa perlu instalasi aplikasi di 
+perangkat masing -masing.  
+2. Kesesuaian Tampilan Dashboard:  Rekapitulasi data, grafik laporan bulanan, dan tabel 
+monitoring  tiket jauh lebih optimal disajikan dalam layar lebar (desktop) yang 
+dimungkinkan oleh antarmuka web responsif.  
+  
+1.3 Product Objective   
+Tujuan Utama:  
+• Digitalisasi Alur Kerja:  Mengganti pelaporan manual menjadi sistem tiket bernomor 
+urut yang trackable  secara real-time. 
+• Segmentasi Hak Akses (RBAC):  Membangun sistem yang memisahkan tampilan dan 
+wewenang secara tegas antara Pelapor, Teknisi, dan Admin.  
+Metrik Keberhasilan:   
+• Technical Compliance:  Berhasil mengimplementasikan fungsi CRUD dengan relasi 
+tabel Many -to-Many  (Tabel Tiket dan Teknisi) secara error -free. 
+• Time -to-Resolve:  Mengurangi waktu tunggu informasi dengan mengubah status tiket 
+secara instan saat teknisi mengambil penugasan.  
+  
+1.4 Target Audience  
+Pelapor (Mahasiswa & Dosen):  Pengguna akhir yang menemukan masalah pada fasilitas 
+kampus dan membutuhkan medium cepat untuk melapor.  
+Teknisi IT:  Staf operasional yang membutuhkan daftar pekerjaan ( to-do list ) terpusat dan 
+terurut berdasarkan kategori kerusakan.  
+Administrator:  Kepala unit IT atau staf tata usaha yang membutuhkan laporan rekapitulasi 
+untuk evaluasi kinerja teknisi dan pendataan aset yang sering rusak.  
+ 
+1.5 Theorical Background & Related Works  
+1.5.1.  Supporting Theories  
+IT Infrastructure Library (ITIL) Framework:  Teori dasar manajemen layanan TI, di mana 
+Incident Management  (penanganan insiden) harus dicatat secara terstruktur untuk mengembalikan 
+layanan ke kondisi normal secepat mungkin.  
+Role -Based Access Control (RBAC):  Konsep keamanan sistem di mana akses ke fitur 
+(BREAD/CRUD) dibatasi secara ketat berdasarkan peran pengguna dalam organisasi.  
+2. Product Overview  
+Sistem Helpdesk IT Kampus adalah platform manajemen insiden berbasis web yang 
+menjembatani komunikasi antara sivitas akademika dengan unit fasilitas IT.  
+2.1. Unique Value Proposition (UVP)  
+Aplikasi ini tidak hanya sekadar "formulir pelaporan", melainkan Sistem Pelacakan (Tracking 
+System) . Setiap laporan yang masuk akan menghasilkan tiket digital yang statusnya dapat 
+dipantau dari mulai "Open" (Dibuat), "On Progress" (Dikerjakan Teknisi), hingga "Resolved" 
+(Selesai). Platform ini didesain menggunakan Clean Architecture  berbasis MVC (Model -
+View -Controller) dengan framework  PHP modern.   
+ 
+3.  User Stories  
+3.1. Mahasiswa & Dosen (Pelapor)  
+• Pelaporan Mudah:  Sebagai dosen/mahasiswa, saya ingin membuat tiket baru (memilih 
+kategori dan mendeskripsikan kerusakan) agar masalah proyektor/WiFi segera diketahui 
+unit IT.  
+• Tracking Status:  Sebagai pelapor, saya ingin melihat dashboard  tiket saya sendiri, agar 
+saya tahu apakah perbaikan sudah mulai dikerjakan atau masih antre.  
+3.2. Teknisi IT (Eksekutor)  
+• Pengambilan Tugas:  Sebagai teknisi, saya ingin melihat daftar semua tiket yang berstatus 
+"Open", agar saya bisa mengklik "Ambil Tugas" pada kerusakan yang sesuai dengan 
+keahlian saya.  
+• Update Progres:  Sebagai teknisi, saya ingin mengubah status tiket menjadi "Resolved" 
+dan menambahkan catatan teknis, agar admin dan pelapor tahu bahwa pekerjaan telah 
+selesai.  
+3.3. Administrator (Pengawas)  
+• Master Data:  Sebagai admin, saya ingin memiliki hak akses penuh untuk CRUD data 
+Kategori, Departemen, dan Akun Pengguna, agar sistem tetap terstruktur.  
+• Monitoring Keseluruhan:  Sebagai admin, saya ingin melihat dashboard  statistik (total  
+tiket masuk, tiket selesai, performa teknisi) untuk keperluan laporan bulanan.  
+ 
+4. Assumptions  
+• Pengguna memiliki koneksi internet/intranet kampus yang stabil untuk mengakses  web. 
+• Akun untuk Pelapor, Teknisi, dan Admin dibuat atau diregistrasikan oleh sistem secara 
+internal (belum terintegrasi dengan portal SSO kampus resmi untuk lingkup  prototype  ini). 
+• Browser  yang digunakan mendukung eksekusi JavaScript (untuk validasi form dan elemen 
+dinamis  framework  CSS).  
+ 
+5. Acceptance Criteria  
+• Login Multi -Role:  Sistem wajib mengarahkan pengguna ke  dashboard  yang berbeda 
+berdasarkan peran (Admin, Teknisi, atau Pelapor) saat berhasil  login . 
+• Relasi Many -to-Many Aktif:  Satu tiket masalah berat harus bisa ditugaskan/diambil oleh 
+lebih dari satu teknisi secara bersamaan di dalam  database . 
+• CRUD Tanpa Error:  Operasi Tambah, Ubah, Hapus, dan Tampil pada  master data  
+(khusus Admin) harus tersimpan dengan aman di basis data MySQL.  
+• Validasi Status:  Pelapor tidak diizinkan mengubah status tiket menjadi "Selesai"; tombol 
+tersebut hanya boleh muncul dan diakses oleh Teknisi.  
+6. Functional Requirements  
+Requirement 
+Name  Priority  Description of the Feature  Goal the user wants to 
+reach  
+Sistem Login & 
+Autentikasi  Must 
+Have  Gerbang masuk aplikasi dengan validasi 
+level akses (RBAC).  Masuk ke sistem 
+dengan antarmuka 
+yang sesuai jabatan.  
+Dashboard 
+Dinamis  Must 
+Have  Tampilan ringkasan yang berbeda untuk 
+tiap role (Statistik untuk Admin, Tiket 
+Aktif untuk Teknisi/Pelapor).  Memantau ringkasan 
+informasi secara cepat 
+saat login.  
+Manajemen 
+Master Data  Must 
+Have  Fitur CRUD lengkap untuk mengelola 
+Users, Kategori Masalah, dan 
+Departemen.  Admin dapat menjaga 
+kebersihan dan struktur 
+basis data.  
+Manajemen Tiket 
+(Create/Read)  Must 
+Have  Form pengajuan laporan baru dan tabel 
+riwayat pelaporan.  Pelapor dapat 
+membuat tiket insiden 
+dengan mudah.  
+Update Status 
+Tiket  Must 
+Have  Tombol action (Ambil Tugas, Selesaikan) 
+yang mengubah warna badge status 
+(Open/Progress/Resolved).  Teknisi dapat 
+melaporkan progres 
+pekerjaannya secara 
+sistematis.  
+Sistem 
+Pencarian/Filter  Should 
+Have  Kolom search untuk mencari nomor tiket 
+atau memfilter tiket berdasarkan status.  Menghemat waktu 
+pencarian tiket tertentu 
+di dashboard.  
+ 
+ 
+7. Non-functional Requirement  
+Requirement Name  Priority  Description of the Feature  
+Responsiveness (UI)  High  Antarmuka web harus tetap rapi dan readable saat dibuka melalui browser 
+smartphone atau tablet (menggunakan grid system CSS).  
+Data Integrity & 
+Relational  High  Foreign Keys pada MySQL harus dikonfigurasi menggunakan ON 
+DELETE CASCADE atau RESTRICT untuk mencegah data orphan (data 
+yatim/rusak).  
+Security  High  Sistem wajib menggunakan hashing (seperti bcrypt) untuk menyimpan 
+password pengguna, serta perlindungan dari SQL Injection.  
+Maintainability  Medium  Source code wajib diunggah ke GitHub dengan pesan commit yang 
+deskriptif sebagai bukti kontribusi kolaborasi tim.  
+  
+8. Dependencies and External Apps/API  
+Kategori  Nama Layanan/Library  Fungsi dan Kegunaan Utama  
+Framework 
+Backend  Laravel  Menyediakan struktur MVC, sistem Routing, dan 
+Eloquent ORM untuk mengelola logika relasi 
+database dengan mudah.  
+Starter Kit 
+(Auth)  Laravel Breeze / UI  Menyediakan kerangka siap pakai untuk fitur Login, 
+Logout, dan perlindungan route (Autentikasi).  
+Framework 
+CSS Bootstrap 5 (via Template 
+Stisla / SB Admin)  Membangun antarmuka dashboard dan komponen 
+UI agar responsif di berbagai perangkat.  
+Library 
+JavaScript  jQuery / Alpine.js  Menangani interaksi frontend dinamis seperti modal 
+pop-up, konfirmasi hapus data, dan manipulasi 
+DOM.  
+Basis Data  MySQL  Sebagai Relational Database Management System 
+(RDBMS) utama penyimpanan data pelaporan.  
+Version 
+Control  Git & GitHub  Tempat repositori kode utama untuk kolaborasi, 
+tracking history commit, dan merging kode antar 3 
+anggota.  
+  
+  
