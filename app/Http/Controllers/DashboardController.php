@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -19,12 +20,12 @@ class DashboardController extends Controller
         $statusDistribution = $this->getStatusDistribution();
         $technicians = User::where('role', 'teknisi')->where('is_active', true)->get();
         
-        return view('dashboard.index', compact(
-            'stats',
-            'recentTickets',
-            'statusDistribution',
-            'technicians'
-        ));
+        return Inertia::render('Dashboard', [
+            'stats' => $stats,
+            'recentTickets' => $recentTickets,
+            'statusDistribution' => $statusDistribution,
+            'technicians' => $technicians
+        ]);
     }
 
     private function getStatsForRole($user): array
