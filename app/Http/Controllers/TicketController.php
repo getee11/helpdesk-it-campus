@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class TicketController extends Controller
 {
@@ -88,7 +89,12 @@ class TicketController extends Controller
             })->count(),
         ];
         
-        return view('tickets.index', compact('tickets', 'categories', 'technicians', 'counts'));
+        return Inertia::render('Tickets/Index', [
+            'tickets' => $tickets,
+            'categories' => $categories,
+            'technicians' => $technicians,
+            'counts' => $counts
+        ]);
     }
 
     public function create()
@@ -101,7 +107,9 @@ class TicketController extends Controller
         
         $categories = Category::all();
         
-        return view('tickets.create', compact('categories'));
+        return Inertia::render('Tickets/Create', [
+            'categories' => $categories
+        ]);
     }
 
     public function store(Request $request)
@@ -161,7 +169,12 @@ class TicketController extends Controller
         
         $ticket->load(['user.department', 'category', 'technicians', 'comments.user']);
         
-        return view('tickets.show', compact('ticket'));
+        $availableTechnicians = User::where('role', 'teknisi')->where('is_active', true)->get();
+        
+        return Inertia::render('Tickets/Show', [
+            'ticket' => $ticket,
+            'availableTechnicians' => $availableTechnicians
+        ]);
     }
 
     public function edit(Ticket $ticket)
@@ -175,7 +188,11 @@ class TicketController extends Controller
         $categories = Category::all();
         $technicians = User::where('role', 'teknisi')->where('is_active', true)->get();
         
-        return view('tickets.edit', compact('ticket', 'categories', 'technicians'));
+        return Inertia::render('Tickets/Edit', [
+            'ticket' => $ticket,
+            'categories' => $categories,
+            'technicians' => $technicians
+        ]);
     }
 
     public function update(Request $request, Ticket $ticket)
