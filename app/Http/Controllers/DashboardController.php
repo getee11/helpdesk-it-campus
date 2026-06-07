@@ -14,12 +14,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
         $stats = $this->getStatsForRole($user);
         $recentTickets = $this->getRecentTicketsForRole($user);
         $statusDistribution = $this->getStatusDistribution();
         $technicians = User::where('role', 'teknisi')->where('is_active', true)->get();
-        
+
         return Inertia::render('Dashboard', [
             'stats' => $stats,
             'recentTickets' => $recentTickets,
@@ -31,7 +31,7 @@ class DashboardController extends Controller
     private function getStatsForRole($user): array
     {
         $stats = [];
-        
+
         if ($user->isSuperAdmin() || $user->isAdmin()) {
             $stats = [
                 ['num' => Ticket::count(), 'label' => 'Total Tiket', 'icon' => 'bi-ticket', 'accent' => true],
@@ -54,7 +54,7 @@ class DashboardController extends Controller
                 ['num' => Ticket::where('user_id', $user->id)->where('status', 'resolved')->count(), 'label' => 'Selesai', 'icon' => 'bi-check-circle', 'color' => '#2ead4b'],
             ];
         }
-        
+
         return $stats;
     }
 
@@ -72,7 +72,7 @@ class DashboardController extends Controller
                 ->limit(10)
                 ->get();
         } else {
-            return Ticket::with(['category', 'technicians'])
+            return Ticket::with(['user', 'category', 'technicians'])
                 ->where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
                 ->limit(10)
