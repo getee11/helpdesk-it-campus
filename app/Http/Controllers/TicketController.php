@@ -16,14 +16,10 @@ class TicketController extends Controller
     {
         $user = Auth::user();
         
-        $query = Ticket::with(['user', 'category', 'technicians']);
-        
-        // Filter by role
-        if ($user->isTeknisi()) {
-            $query->whereHas('technicians', function($q) use($user) { $q->where('users.id', $user->id); });
-        } elseif ($user->isPelapor()) {
-            $query->where('user_id', $user->id);
-        }
+        $query = $this->scopeTicketsForUser(
+            Ticket::with(['user', 'category', 'technicians']),
+            $user
+        );
         
         // Apply filters
         if ($request->filled('status') && $request->status !== 'all') {
@@ -46,47 +42,17 @@ class TicketController extends Controller
             });
         }
         
-        $tickets = $query->orderBy('created_at', 'desc')->paginate(15);
+        $tickets = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
         $categories = Category::all();
         $technicians = User::where('role', 'teknisi')->where('is_active', true)->get();
         
         // Count by status
         $counts = [
-            'all' => Ticket::when(!$user->isSuperAdmin() && !$user->isAdmin(), function($q) use ($user) {
-                if ($user->isTeknisi()) {
-                    return $q->whereHas('technicians', function($q2) use($user) { $q2->where('users.id', $user->id); });
-                } elseif ($user->isPelapor()) {
-                    return $q->where('user_id', $user->id);
-                }
-            })->count(),
-            'open' => Ticket::where('status', 'open')->when(!$user->isSuperAdmin() && !$user->isAdmin(), function($q) use ($user) {
-                if ($user->isTeknisi()) {
-                    return $q->whereHas('technicians', function($q2) use($user) { $q2->where('users.id', $user->id); });
-                } elseif ($user->isPelapor()) {
-                    return $q->where('user_id', $user->id);
-                }
-            })->count(),
-            'progress' => Ticket::where('status', 'progress')->when(!$user->isSuperAdmin() && !$user->isAdmin(), function($q) use ($user) {
-                if ($user->isTeknisi()) {
-                    return $q->whereHas('technicians', function($q2) use($user) { $q2->where('users.id', $user->id); });
-                } elseif ($user->isPelapor()) {
-                    return $q->where('user_id', $user->id);
-                }
-            })->count(),
-            'resolved' => Ticket::where('status', 'resolved')->when(!$user->isSuperAdmin() && !$user->isAdmin(), function($q) use ($user) {
-                if ($user->isTeknisi()) {
-                    return $q->whereHas('technicians', function($q2) use($user) { $q2->where('users.id', $user->id); });
-                } elseif ($user->isPelapor()) {
-                    return $q->where('user_id', $user->id);
-                }
-            })->count(),
-            'cancelled' => Ticket::where('status', 'cancelled')->when(!$user->isSuperAdmin() && !$user->isAdmin(), function($q) use ($user) {
-                if ($user->isTeknisi()) {
-                    return $q->whereHas('technicians', function($q2) use($user) { $q2->where('users.id', $user->id); });
-                } elseif ($user->isPelapor()) {
-                    return $q->where('user_id', $user->id);
-                }
-            })->count(),
+            'all' => $this->scopeTicketsForUser(Ticket::query(), $user)->count(),
+            'open' => $this->scopeTicketsForUser(Ticket::where('status', 'open'), $user)->count(),
+            'progress' => $this->scopeTicketsForUser(Ticket::where('status', 'progress'), $user)->count(),
+            'resolved' => $this->scopeTicketsForUser(Ticket::where('status', 'resolved'), $user)->count(),
+            'cancelled' => $this->scopeTicketsForUser(Ticket::where('status', 'cancelled'), $user)->count(),
         ];
         
         return Inertia::render('Tickets/Index', [
@@ -163,7 +129,7 @@ class TicketController extends Controller
             abort(403);
         }
         
-        if ($user->isTeknisi() && !$ticket->technicians->contains($user->id)) {
+        if ($user->isTeknisi() && !$this->canTechnicianAccessTicket($user, $ticket)) {
             abort(403);
         }
         
@@ -267,6 +233,14 @@ class TicketController extends Controller
         if (!$user->isTeknisi()) {
             abort(403);
         }
+
+        if (!$this->canTechnicianAccessTicket($user, $ticket)) {
+            abort(403);
+        }
+
+        if (in_array($ticket->status, ['resolved', 'cancelled'], true)) {
+            return back()->with('error', 'Tiket sudah ditutup dan tidak bisa diambil.');
+        }
         
         if ($ticket->technicians->contains($user->id)) {
             return back()->with('error', 'Anda sudah mengambil tiket ini!');
@@ -313,6 +287,14 @@ class TicketController extends Controller
     public function addComment(Request $request, Ticket $ticket)
     {
         $user = Auth::user();
+
+        if ($user->isPelapor() && $ticket->user_id !== $user->id) {
+            abort(403);
+        }
+
+        if ($user->isTeknisi() && !$this->canTechnicianAccessTicket($user, $ticket)) {
+            abort(403);
+        }
         
         $validated = $request->validate([
             'content' => 'required|string',
@@ -324,5 +306,30 @@ class TicketController extends Controller
         ]);
         
         return back()->with('success', 'Komentar berhasil ditambahkan!');
+    }
+
+    private function scopeTicketsForUser($query, User $user)
+    {
+        if ($user->isTeknisi()) {
+            $query->where(function ($q) use ($user) {
+                $q->where('status', 'open')
+                  ->orWhereHas('technicians', function ($q2) use ($user) {
+                      $q2->where('users.id', $user->id);
+                  });
+            });
+        } elseif ($user->isPelapor()) {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query;
+    }
+
+    private function canTechnicianAccessTicket(User $user, Ticket $ticket): bool
+    {
+        if (!$user->isTeknisi()) {
+            return true;
+        }
+
+        return $ticket->status === 'open' || $ticket->technicians()->where('users.id', $user->id)->exists();
     }
 }
