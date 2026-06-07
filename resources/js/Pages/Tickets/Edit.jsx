@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import Card from '@/Components/Card';
 import Button from '@/Components/Button';
 import TextInput from '@/Components/TextInput';
 
 export default function Edit({ ticket, categories, technicians }) {
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [deleteProcessing, setDeleteProcessing] = useState(false);
+
     const { data, setData, put, processing, errors } = useForm({
         category_id: ticket.category_id,
         priority: ticket.priority,
@@ -20,6 +23,20 @@ export default function Edit({ ticket, categories, technicians }) {
     const submit = (e) => {
         e.preventDefault();
         put(route('tickets.update', ticket.id));
+    };
+
+    const handleDelete = () => {
+        setDeleteProcessing(true);
+        router.delete(route('tickets.destroy', ticket.id), {
+            onSuccess: () => {
+                setDeleteProcessing(false);
+                setConfirmDelete(false);
+            },
+            onError: () => {
+                setDeleteProcessing(false);
+                setConfirmDelete(false);
+            }
+        });
     };
 
     const handleTechnicianChange = (e) => {
@@ -151,12 +168,54 @@ export default function Edit({ ticket, categories, technicians }) {
                         </div>
 
                         <div className="pt-6 border-t border-gray-200">
-                            <Button type="submit" variant="dark" size="lg" className="w-full md:w-auto" disabled={processing}>
-                                Simpan Perubahan
-                            </Button>
+                            <div className="flex gap-3">
+                                <Button type="submit" variant="dark" size="lg" className="flex-1 md:flex-none" disabled={processing}>
+                                    Simpan Perubahan
+                                </Button>
+                                <Button 
+                                    type="button" 
+                                    variant="danger" 
+                                    size="lg" 
+                                    className="flex-1 md:flex-none"
+                                    onClick={() => setConfirmDelete(true)}
+                                    disabled={processing}
+                                >
+                                    Hapus Tiket
+                                </Button>
+                            </div>
                         </div>
                     </form>
                 </Card>
+
+                {/* Delete Confirmation Modal */}
+                {confirmDelete && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-6">
+                            <h3 className="text-lg font-bold text-ink mb-2">Hapus Tiket</h3>
+                            <p className="text-gray-600 mb-6">
+                                Apakah Anda yakin ingin menghapus tiket <strong>#{ticket.ticket_number}</strong>? Tindakan ini tidak dapat dibatalkan.
+                            </p>
+                            <div className="flex gap-3 justify-end">
+                                <Button 
+                                    type="button"
+                                    variant="soft"
+                                    onClick={() => setConfirmDelete(false)}
+                                    disabled={deleteProcessing}
+                                >
+                                    Batal
+                                </Button>
+                                <Button 
+                                    type="button"
+                                    variant="danger"
+                                    onClick={handleDelete}
+                                    disabled={deleteProcessing}
+                                >
+                                    {deleteProcessing ? 'Menghapus...' : 'Hapus'}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </AuthenticatedLayout>
     );
