@@ -17,14 +17,14 @@
     <div class="card-body">
         <form action="{{ route('admin.users.index') }}" method="GET" class="row g-3 mb-4">
             <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0 text-muted">
+                <div class="position-relative">
+                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-muted z-1">
                         <i class="bi bi-search"></i>
                     </span>
-                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Cari nama atau email..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="form-control ps-5" placeholder="Cari nama atau email..." value="{{ request('search') }}">
                 </div>
             </div>
-            
+
             <div class="col-md-4">
                 <select name="role" class="form-select">
                     <option value="all">Semua Role</option>
@@ -34,7 +34,7 @@
                     <option value="pelapor" {{ request('role') == 'pelapor' ? 'selected' : '' }}>Pelapor</option>
                 </select>
             </div>
-            
+
             <div class="col-md-2">
                 <button type="submit" class="btn btn-secondary w-100">Filter</button>
             </div>
@@ -57,7 +57,7 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold flex-shrink-0" 
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold flex-shrink-0"
                                      style="width: 40px; height: 40px; background-color: {{ $user->avatar_color }}; color: {{ $user->avatar_text_color }};">
                                     {{ $user->avatar }}
                                 </div>
@@ -95,7 +95,7 @@
                             @endif
                         </td>
                     </tr>
-                    
+
                     <!-- Edit Modal -->
                     <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1">
                         <div class="modal-dialog modal-lg">
@@ -178,7 +178,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div class="mt-4">
             {{ $users->links('pagination::bootstrap-5') }}
         </div>
