@@ -31,12 +31,12 @@ export default function Authenticated({ children }) {
                                     Tickets
                                 </Link>
                                 {(user?.role === 'admin' || user?.role === 'superadmin') && (
-                                    <Link 
+                                    <a 
                                         href="/admin/users" 
                                         className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out ${route().current('admin.*') ? 'border-primary text-canvas' : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'}`}
                                     >
                                         Admin Panel
-                                    </Link>
+                                    </a>
                                 )}
                             </div>
                         </div>

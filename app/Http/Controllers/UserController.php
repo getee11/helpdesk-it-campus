@@ -13,20 +13,31 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::with('department');
-        
-        if ($request->filled('role') && $request->role !== 'all') {
-            $query->where('role', $request->role);
+
+        $role = strtolower(trim((string) $request->query('role', '')));
+        $roleMap = [
+            'super admin' => 'superadmin',
+            'superadmin' => 'superadmin',
+            'administrator' => 'admin',
+            'admin' => 'admin',
+            'teknisi it' => 'teknisi',
+            'teknisi' => 'teknisi',
+            'pelapor' => 'pelapor',
+        ];
+
+        if ($role !== '' && $role !== 'all') {
+            $query->where('role', $roleMap[$role] ?? $role);
         }
-        
-        if ($request->filled('search')) {
-            $search = $request->search;
+
+        $search = trim((string) $request->query('search', ''));
+        if ($search !== '') {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
-        
-        $users = $query->orderBy('name')->paginate(15);
+
+        $users = $query->orderBy('name')->paginate(15)->withQueryString();
         $departments = Department::all();
         
         return view('users.index', compact('users', 'departments'));
@@ -90,7 +101,8 @@ class UserController extends Controller
         
         $validated = $request->validate($rules);
         
-        $updateData = collect($validated)->except('password')->toArray();
+        $updateData = collect($validated)->except(['password', 'is_active'])->toArray();
+        $updateData['is_active'] = $request->boolean('is_active');
         
         if ($request->filled('password')) {
             $updateData['password'] = Hash::make($validated['password']);
